@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { StyleSheet, Text, Image, View } from "react-native";
 
 import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "../firebaseConfig";
+import { auth } from "../config/firebase";
 
 const styles = StyleSheet.create({
   input: {
@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
 
 export default function CreateAccount() {
   const [user, setUser] = useState<User>();
+  const [idToken, setIdToken] = useState("");
 
   useEffect(() => {
     const unsubscribeFromAuthStatuChanged = onAuthStateChanged(auth, (user) => {
@@ -26,9 +27,12 @@ export default function CreateAccount() {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
         setUser(user);
+        user.getIdToken().then(setIdToken);
+        
       } else {
         // User is signed out
         setUser(undefined);
+        setIdToken("");
       }
     });
 
@@ -40,6 +44,7 @@ export default function CreateAccount() {
       {user ? (
         <View>
           <Text>current user : {user.email}</Text>
+          <Text>id token : {idToken}</Text>
         </View>
       ) : (
         <Text> not signed in </Text>

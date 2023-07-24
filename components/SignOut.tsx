@@ -1,7 +1,7 @@
 import { StyleSheet, Button } from "react-native";
 
 import { signOut } from "firebase/auth";
-import { auth } from "../firebaseConfig";
+import { auth } from "../config/firebase";
 
 const styles = StyleSheet.create({
   input: {

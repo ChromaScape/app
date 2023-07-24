@@ -2,7 +2,7 @@ import { useState } from "react";
 import { StyleSheet, Text, TextInput, View, Button } from "react-native";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebaseConfig";
+import { auth } from "../config/firebase";
 
 const styles = StyleSheet.create({
   input: {

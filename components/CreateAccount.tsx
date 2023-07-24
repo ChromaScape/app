@@ -2,7 +2,10 @@ import { useState } from "react";
 import { StyleSheet, Text, TextInput, View, Button } from "react-native";
 
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebaseConfig";
+import { auth } from "../config/firebase";
+
+import { API_ENDPOINT, ApiUser } from "../config/api";
+
 
 const styles = StyleSheet.create({
   input: {
@@ -22,17 +25,36 @@ export default function CreateAccount() {
   const [password, onChangePassword] = useState("");
 
   async function pushNewAccountCreds() {
-    return createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      
+      const idToken = await auth.currentUser.getIdToken();
+
+      console.log(idToken)
+
+      const res = await fetch(API_ENDPOINT + "/user", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: idToken,
+        }
       });
+
+      const newUser = await res.text();
+      console.log(newUser);
+
+      
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+
+      console.error(error);
+    }
   }
 
   return (
