@@ -32,7 +32,10 @@ export default function CreateAccount() {
         password
       );
       
-      const idToken = await auth.currentUser.getIdToken();
+      const idToken = await auth.currentUser?.getIdToken();
+      if(!idToken){
+        throw new Error("not logged in somehow")
+      }
 
       console.log(idToken)
 
@@ -49,7 +52,7 @@ export default function CreateAccount() {
       console.log(newUser);
 
       
-    } catch (error) {
+    } catch (error: any) {
       const errorCode = error.code;
       const errorMessage = error.message;
 

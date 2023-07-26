@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, Image, View } from "react-native";
+import { StyleSheet, Text, Image, View, Button } from "react-native";
 
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "../config/firebase";
+import { API_ENDPOINT, ApiUser } from "../config/api";
 
 const styles = StyleSheet.create({
   input: {
@@ -20,6 +21,8 @@ const styles = StyleSheet.create({
 export default function CreateAccount() {
   const [user, setUser] = useState<User>();
   const [idToken, setIdToken] = useState("");
+
+  const [apiUser, setApiUser] = useState<ApiUser | undefined>();
 
   useEffect(() => {
     const unsubscribeFromAuthStatuChanged = onAuthStateChanged(auth, (user) => {
@@ -39,12 +42,46 @@ export default function CreateAccount() {
     return unsubscribeFromAuthStatuChanged;
   }, []);
 
+  useEffect(() => {
+    getUserFromDb()
+  }, [])
+
+
+  async function getUserFromDb() {
+    try {
+
+      const idToken = await auth.currentUser?.getIdToken();
+      console.log(idToken)
+      if (!idToken) {
+        return;
+      }
+
+      const res = await fetch(API_ENDPOINT + "/user", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: idToken,
+        },
+      });
+
+      const retUser = (await res.json()) as ApiUser;
+      setApiUser(retUser)
+      
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return (
     <View style={styles.box}>
       {user ? (
         <View>
           <Text>current user : {user.email}</Text>
+          <Text>firebase id : {user.uid}</Text>
+          <Text>db id : {apiUser?.id.toString()}</Text>
           <Text>id token : {idToken}</Text>
+          <Button onPress={() => console.log(idToken)} title="log token"/>
         </View>
       ) : (
         <Text> not signed in </Text>
