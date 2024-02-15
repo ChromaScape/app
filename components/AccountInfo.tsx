@@ -5,18 +5,7 @@ import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { API_ENDPOINT, ApiUser } from "../config/api";
 
-const styles = StyleSheet.create({
-  input: {
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    width: 200,
-  },
-  box: {
-    borderWidth: 1,
-    padding: 10,
-  },
-});
+import styles from "../styles";
 
 export default function CreateAccount() {
   const [user, setUser] = useState<User>();
@@ -31,7 +20,6 @@ export default function CreateAccount() {
         // https://firebase.google.com/docs/reference/js/firebase.User
         setUser(user);
         user.getIdToken().then(setIdToken);
-        
       } else {
         // User is signed out
         setUser(undefined);
@@ -43,15 +31,13 @@ export default function CreateAccount() {
   }, []);
 
   useEffect(() => {
-    getUserFromDb()
-  }, [])
-
+    getUserFromDb();
+  }, []);
 
   async function getUserFromDb() {
     try {
-
       const idToken = await auth.currentUser?.getIdToken();
-      console.log(idToken)
+      // console.log(idToken);
       if (!idToken) {
         return;
       }
@@ -66,10 +52,9 @@ export default function CreateAccount() {
       });
 
       const retUser = (await res.json()) as ApiUser;
-      setApiUser(retUser)
-      
+      setApiUser(retUser);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   }
 
@@ -80,8 +65,8 @@ export default function CreateAccount() {
           <Text>current user : {user.email}</Text>
           <Text>firebase id : {user.uid}</Text>
           <Text>db id : {apiUser?.id.toString()}</Text>
-          <Text>id token : {idToken}</Text>
-          <Button onPress={() => console.log(idToken)} title="log token"/>
+          {/* <Text>id token : {idToken}</Text> */}
+          <Button onPress={() => console.log(idToken)} title="log token" />
         </View>
       ) : (
         <Text> not signed in </Text>

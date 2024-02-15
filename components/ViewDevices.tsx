@@ -4,20 +4,11 @@ import { StyleSheet, Text, TextInput, View, Button } from "react-native";
 import { auth } from "../config/firebase";
 import { API_ENDPOINT, Device } from "../config/api";
 
-const styles = StyleSheet.create({
-  input: {
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    width: 200,
-  },
-  box: {
-    borderWidth: 1,
-    padding: 10,
-  },
-});
+import styles from "../styles";
 
-export default function ViewDevices(prop:{onDeviceChange: (d: Device[]) => void}) {
+export default function ViewDevices(prop: {
+  onDeviceChange: (d: Device[]) => void;
+}) {
   const [message, setMessage] = useState("");
   const [devices, setDevices] = useState<Device[]>([]);
 
@@ -46,7 +37,7 @@ export default function ViewDevices(prop:{onDeviceChange: (d: Device[]) => void}
       });
 
       const devicesList = (await res.json()) as Device[];
-      console.log(devicesList);
+      // console.log(devicesList);
 
       if (!devicesList.length) {
         setMessage("no devices");
@@ -57,7 +48,7 @@ export default function ViewDevices(prop:{onDeviceChange: (d: Device[]) => void}
       setDevices(devicesList);
       prop.onDeviceChange(devicesList);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       setMessage("failed");
     }
   }

@@ -1,32 +1,24 @@
-import { StyleSheet, Button } from "react-native";
+import { Button, View } from "react-native";
 
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
 
-const styles = StyleSheet.create({
-  input: {
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    width: 200,
-  },
-  box: {
-    borderWidth: 1,
-    padding: 10,
-  },
-});
+import styles from "../styles";
 
 export default function SignOut() {
-
   async function performSignOut() {
-    return signOut(auth).then(() => {
+    return signOut(auth)
+      .then(() => {
         // Sign-out successful.
-      }).catch((error) => {
+      })
+      .catch((error) => {
         // An error happened.
       });
   }
 
   return (
+    <View style={styles.box}>
       <Button onPress={performSignOut} title="Sign Out" />
+    </View>
   );
 }

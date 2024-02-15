@@ -4,23 +4,11 @@ import { StyleSheet, Text, TextInput, View, Button } from "react-native";
 import { auth } from "../config/firebase";
 import { API_ENDPOINT, Pattern } from "../config/api";
 
-const styles = StyleSheet.create({
-  input: {
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    width: 200,
-  },
-  box: {
-    borderWidth: 1,
-    padding: 10,
-  },
-});
+import styles from "../styles";
 
 export default function CreatePattern() {
   const [message, setMessage] = useState("");
   const [content, setContent] = useState("");
-
 
   async function createPattern() {
     try {
@@ -40,13 +28,12 @@ export default function CreatePattern() {
           "Content-Type": "application/json",
           Authorization: idToken,
         },
-        body: JSON.stringify({content})
+        body: JSON.stringify({ content }),
       });
 
       setMessage("sent");
-      
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       setMessage("failed");
     }
   }
@@ -56,13 +43,13 @@ export default function CreatePattern() {
       <Text>create pattern</Text>
       <Text> {message} </Text>
       <TextInput
-          onChangeText={setContent}
-          value={content}
-          style={styles.input}
+        multiline={true}
+        numberOfLines={4}
+        onChangeText={setContent}
+        value={content}
+        style={styles.input}
       />
       <Button onPress={createPattern} title="Create Pattern" />
-
-      
     </View>
   );
 }
