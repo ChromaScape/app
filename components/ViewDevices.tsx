@@ -5,6 +5,7 @@ import { auth } from "../config/firebase";
 import { API_ENDPOINT, Device } from "../config/api";
 
 import styles from "../styles";
+import React from "react";
 
 export default function ViewDevices(prop: {
   onDeviceChange: (d: Device[]) => void;

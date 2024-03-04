@@ -18,19 +18,21 @@ const dummyDeviceData: { devices: Device[] } = {
 
 const Devices = () => {
   const devices = dummyDeviceData.devices;
-  const deviceNames: string[] = dummyDeviceData.devices.map(device => device.name);
+  const deviceNames: string[] = dummyDeviceData.devices.map(
+    (device) => device.name
+  );
 
   return (
     <View style={styles.container}>
-        <Stack.Screen
+      <Stack.Screen
         options={{
-          title: 'Devices',
+          title: "Devices",
           headerStyle: {
-            backgroundColor: '#74B3CE',
+            backgroundColor: "#74B3CE",
           },
-          headerTintColor: '#fff',
+          headerTintColor: "#fff",
           headerTitleStyle: {
-            fontWeight: '400', 
+            fontWeight: "400",
           },
         }}
       />
@@ -38,16 +40,20 @@ const Devices = () => {
         <Pressable
           key={device}
           style={styles.deviceBlock}
-          onPress={() => router.push({
-            pathname: "/device/[id]",
-            params: {device},
-          })
-        }
+          onPress={() =>
+            router.push({
+              pathname: "/device/[id]",
+              params: { device },
+            })
+          }
         >
           <Text style={styles.deviceText}>{device}</Text>
         </Pressable>
       ))}
-      <Pressable onPress ={() => router.push ("/pairing")} style={styles.addDeviceBlock}>
+      <Pressable
+        onPress={() => router.push("/pairing")}
+        style={styles.addDeviceBlock}
+      >
         <Text style={styles.addDeviceText}>Add Device</Text>
       </Pressable>
     </View>
@@ -65,12 +71,12 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 5,
     borderRadius: 3,
-    width: 200
+    width: 200,
   },
   deviceText: {
     color: "white",
     fontSize: 16,
-    textAlign: "center", 
+    textAlign: "center",
     justifyContent: "center",
   },
   addDeviceBlock: {

@@ -5,7 +5,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 
 import styles from "../styles";
-
+import React from "react";
 
 export default function LogIn() {
   const [email, onChangeEmail] = useState("");

@@ -1,7 +1,14 @@
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View, Button, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Button,
+  Pressable,
+} from "react-native";
 import React from "react";
-import { router} from "expo-router";
+import { router } from "expo-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { API_ENDPOINT, ApiUser } from "../config/api";
@@ -46,12 +53,8 @@ export default function CreateAccount() {
 
   return (
     <View style={styles.container}>
-        <Text style={styles.signupTitle}>
-            Sign up
-        </Text>
-        <Text style={styles.signupInfo}>
-            A few quicks things to get started
-        </Text>
+      <Text style={styles.signupTitle}>Sign up</Text>
+      <Text style={styles.signupInfo}>A few quicks things to get started</Text>
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email"
@@ -70,19 +73,13 @@ export default function CreateAccount() {
       </View>
 
       <Pressable style={styles.signupBlock} onPress={pushNewAccountCreds}>
-        <Text style={styles.loginText}>
-        Create Account
-        </Text>
+        <Text style={styles.loginText}>Create Account</Text>
       </Pressable>
       <View style={styles.signupText}>
-        <Text style={styles.signupInfo}>
-        Already have an account? 
-        </Text>
+        <Text style={styles.signupInfo}>Already have an account?</Text>
         <View style={styles.space}></View>
-        <Pressable onPress ={() => router.push ("/login")}>
-            <Text style={styles.login}>
-            Log in
-            </Text>
+        <Pressable onPress={() => router.push("/login")}>
+          <Text style={styles.login}>Log in</Text>
         </Pressable>
       </View>
     </View>
@@ -90,63 +87,63 @@ export default function CreateAccount() {
 }
 
 const styles = StyleSheet.create({
-    signupBlock: {
-        backgroundColor: "#A7AFB2",
-        padding: 10,
-        borderRadius: 10,
-        width: 200,
-        marginBottom: 10
-    }, 
-    space: {
-        width: 5,
-    },
-    signupText: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-
-    container: {
-        flex: 1,
-        backgroundColor: "#FFE4C4",
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    inputContainer: {
-        backgroundColor: 'white',
-        borderRadius: 25,
-        padding: 10,
-        width: '80%', 
-        marginBottom: 15
-    },
-
-    loginText: {
-        color: "white",
-        fontSize: 16,
-        textAlign: "center", 
-        justifyContent: "center",
-    },
-
-    signupTitle: {
-        color: "black",
-        fontSize: 30,
-        textAlign: "center", 
-        justifyContent: "center",
-        marginBottom: 20
-    },
-
-    signupInfo: {
-      color: "black",
-      fontSize: 15,
-      textAlign: "center", 
-      justifyContent: "center",
-      marginBottom: 20
+  signupBlock: {
+    backgroundColor: "#A7AFB2",
+    padding: 10,
+    borderRadius: 10,
+    width: 200,
+    marginBottom: 10,
+  },
+  space: {
+    width: 5,
+  },
+  signupText: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 
-    login: {
-        color: "#74B3CE",
-        fontSize: 15,
-        textAlign: "center", 
-        justifyContent: "center",
-    },
-  });
+  container: {
+    flex: 1,
+    backgroundColor: "#FFE4C4",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  inputContainer: {
+    backgroundColor: "white",
+    borderRadius: 25,
+    padding: 10,
+    width: "80%",
+    marginBottom: 15,
+  },
+
+  loginText: {
+    color: "white",
+    fontSize: 16,
+    textAlign: "center",
+    justifyContent: "center",
+  },
+
+  signupTitle: {
+    color: "black",
+    fontSize: 30,
+    textAlign: "center",
+    justifyContent: "center",
+    marginBottom: 20,
+  },
+
+  signupInfo: {
+    color: "black",
+    fontSize: 15,
+    textAlign: "center",
+    justifyContent: "center",
+    marginBottom: 20,
+  },
+
+  login: {
+    color: "#74B3CE",
+    fontSize: 15,
+    textAlign: "center",
+    justifyContent: "center",
+  },
+});
