@@ -3,21 +3,12 @@ import { StyleSheet, Text, TextInput, View, Button } from "react-native";
 
 import { auth } from "../config/firebase";
 import { API_ENDPOINT, Pattern } from "../config/api";
+import styles from "../styles";
+import React from "react";
 
-const styles = StyleSheet.create({
-  input: {
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    width: 200,
-  },
-  box: {
-    borderWidth: 1,
-    padding: 10,
-  },
-});
-
-export default function ViewPatterns(prop:{onPatternChange: (d: Pattern[]) => void}) {
+export default function ViewPatterns(prop: {
+  onPatternChange: (d: Pattern[]) => void;
+}) {
   const [message, setMessage] = useState("");
   const [patterns, setPatterns] = useState<Pattern[]>([]);
 
@@ -46,7 +37,7 @@ export default function ViewPatterns(prop:{onPatternChange: (d: Pattern[]) => vo
       });
 
       const patternsList = (await res.json()) as Pattern[];
-      console.log(patternsList);
+      // console.log(patternsList);
 
       if (!patternsList.length) {
         setMessage("no patterns");
@@ -57,7 +48,7 @@ export default function ViewPatterns(prop:{onPatternChange: (d: Pattern[]) => vo
       setPatterns(patternsList);
       prop.onPatternChange(patternsList);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       setMessage("failed");
     }
   }

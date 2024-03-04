@@ -1,24 +1,13 @@
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, View, Button } from "react-native";
+import React from "react";
 
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 
 import { API_ENDPOINT, ApiUser } from "../config/api";
 
-
-const styles = StyleSheet.create({
-  input: {
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    width: 200,
-  },
-  box: {
-    borderWidth: 1,
-    padding: 10,
-  },
-});
+import styles from "../styles";
 
 export default function CreateAccount() {
   const [email, onChangeEmail] = useState("");
@@ -31,13 +20,13 @@ export default function CreateAccount() {
         email,
         password
       );
-      
+
       const idToken = await auth.currentUser?.getIdToken();
-      if(!idToken){
-        throw new Error("not logged in somehow")
+      if (!idToken) {
+        throw new Error("not logged in somehow");
       }
 
-      console.log(idToken)
+      // console.log(idToken)
 
       const res = await fetch(API_ENDPOINT + "/user", {
         method: "POST",
@@ -45,13 +34,11 @@ export default function CreateAccount() {
           Accept: "application/json",
           "Content-Type": "application/json",
           Authorization: idToken,
-        }
+        },
       });
 
       const newUser = await res.text();
-      console.log(newUser);
-
-      
+      // console.log(newUser);
     } catch (error: any) {
       const errorCode = error.code;
       const errorMessage = error.message;

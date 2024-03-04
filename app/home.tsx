@@ -11,6 +11,7 @@ import CreatePattern from "../components/CreatePattern";
 import ViewDevices from "../components/ViewDevices";
 import SetDevicePattern from "../components/SetDevicePattern";
 import { Pattern, Device } from "../config/api";
+import React from "react";
 
 export default function App() {
   const [patterns, setPatterns] = useState<Pattern[]>([]);
@@ -31,8 +32,7 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      paddingVertical: 100,
-    },
-  });
-  
+  container: {
+    paddingVertical: 100,
+  },
+});

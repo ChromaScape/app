@@ -3,19 +3,8 @@ import { StyleSheet, Text, TextInput, View, Button } from "react-native";
 
 import { auth } from "../config/firebase";
 import { API_ENDPOINT, Pattern, Device } from "../config/api";
-
-const styles = StyleSheet.create({
-  input: {
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    width: 200,
-  },
-  box: {
-    borderWidth: 1,
-    padding: 10,
-  },
-});
+import styles from "../styles";
+import React from "react";
 
 export default function SetDevicePattern(prop: {
   patterns: Pattern[];
@@ -55,14 +44,14 @@ export default function SetDevicePattern(prop: {
         }),
       });
 
-      if(res.status == 200){
-        setMessage("success")
+      if (res.status == 200) {
+        setMessage("success");
       } else {
-        setMessage("wrong response")
-        console.log(await res.text())
+        setMessage("wrong response");
+        // console.log(await res.text())
       }
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       setMessage("failed");
     }
   }
