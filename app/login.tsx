@@ -1,26 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View, Pressable } from "react-native";
 import { router } from "expo-router";
 import React from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../config/firebase";
+import { useUser } from "../components/UserProvider";
 
 export default function LogIn() {
   const [email, onChangeEmail] = useState("");
   const [password, onChangePassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  async function LogInWithAccountCreds() {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
-  }
+  const { apiUser, user, idToken, requestLogIn } = useUser();
+
+  useEffect(() => {
+    if (apiUser && user && idToken) {
+      router.push("/Devices");
+    }
+  }, [apiUser]);
 
   return (
     <View style={styles.container}>
@@ -32,23 +28,28 @@ export default function LogIn() {
           placeholder="Email"
           value={email}
           style={styles.loginText}
+          autoCapitalize="none"
+          autoComplete="email"
         />
       </View>
-
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Password"
           onChangeText={onChangePassword}
           value={password}
           style={styles.loginText}
+          autoCapitalize="none"
+          autoComplete="password"
         />
       </View>
-
       <Pressable
         style={styles.loginBlock}
         onPress={() => {
-          LogInWithAccountCreds();
-          router.push("/Devices");
+          requestLogIn(email, password)
+            .catch((e) => setErrorMessage(JSON.stringify(e)))
+            .finally(() => setLoading(false));
+          setLoading(true);
+          // router.push("/Devices");
         }}
       >
         <Text style={styles.loginText}>Log in</Text>
@@ -60,6 +61,7 @@ export default function LogIn() {
           <Text style={styles.signup}>Sign up</Text>
         </Pressable>
       </View>
+      <Text> {loading ? "loading" : errorMessage} </Text>
     </View>
   );
 }
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
   },
 
   loginText: {
-    color: "white",
+    color: "black",
     fontSize: 16,
     textAlign: "center",
     justifyContent: "center",

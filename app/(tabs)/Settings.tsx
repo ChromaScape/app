@@ -3,17 +3,10 @@ import React from "react";
 import { signOut } from "firebase/auth";
 import { Link, router, Stack } from "expo-router";
 import { auth } from "../../config/firebase";
+import { useUser } from "../../components/UserProvider";
 
 export default function SignOut() {
-  async function performSignOut() {
-    return signOut(auth)
-      .then(() => {
-        // Sign-out successful.
-      })
-      .catch((error) => {
-        // An error happened.
-      });
-  }
+  const { apiUser, requestLogOut } = useUser();
 
   return (
     <View style={styles.container}>
@@ -29,7 +22,10 @@ export default function SignOut() {
           },
         }}
       />
-      <Pressable style={styles.logoutBlock}>
+      <Pressable
+        style={styles.logoutBlock}
+        onPress={() => requestLogOut().then(() => router.navigate("/"))}
+      >
         <Text style={styles.logoutText}>Log out</Text>
       </Pressable>
     </View>

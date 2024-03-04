@@ -1,66 +1,35 @@
-import { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  Button,
-  Pressable,
-} from "react-native";
-import React from "react";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, TextInput, View, Pressable } from "react-native";
 import { router } from "expo-router";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../config/firebase";
-import { API_ENDPOINT, ApiUser } from "../config/api";
+import React from "react";
+import { useUser } from "../components/UserProvider";
 
-export default function CreateAccount() {
+export default function LogIn() {
   const [email, onChangeEmail] = useState("");
   const [password, onChangePassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  async function pushNewAccountCreds() {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+  const { apiUser, user, idToken, requestCreateAccount } = useUser();
 
-      const idToken = await auth.currentUser?.getIdToken();
-      if (!idToken) {
-        throw new Error("not logged in somehow");
-      }
-
-      // console.log(idToken)
-
-      const res = await fetch(API_ENDPOINT + "/user", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: idToken,
-        },
-      });
-
-      const newUser = await res.text();
-      // console.log(newUser);
-    } catch (error: any) {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-
-      console.error(error);
+  useEffect(() => {
+    if (apiUser && user && idToken) {
+      router.push("/Devices");
     }
-  }
+  }, [apiUser]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.signupTitle}>Sign up</Text>
+      <Text style={styles.signupTitle}>Sign Up</Text>
       <Text style={styles.signupInfo}>A few quicks things to get started</Text>
       <View style={styles.inputContainer}>
         <TextInput
-          placeholder="Email"
           onChangeText={onChangeEmail}
+          placeholder="Email"
           value={email}
           style={styles.loginText}
+          autoCapitalize="none"
+          autoComplete="email"
         />
       </View>
       <View style={styles.inputContainer}>
@@ -69,19 +38,30 @@ export default function CreateAccount() {
           onChangeText={onChangePassword}
           value={password}
           style={styles.loginText}
+          autoCapitalize="none"
+          autoComplete="password"
         />
       </View>
-
-      <Pressable style={styles.signupBlock} onPress={pushNewAccountCreds}>
+      <Pressable
+        style={styles.signupBlock}
+        onPress={() => {
+          requestCreateAccount(email, password)
+            .catch((e) => setErrorMessage(JSON.stringify(e)))
+            .finally(() => setLoading(false));
+          setLoading(true);
+          // router.push("/Devices");
+        }}
+      >
         <Text style={styles.loginText}>Create Account</Text>
       </Pressable>
       <View style={styles.signupText}>
         <Text style={styles.signupInfo}>Already have an account?</Text>
         <View style={styles.space}></View>
-        <Pressable onPress={() => router.push("/login")}>
+        <Pressable onPress={() => router.push("/signup")}>
           <Text style={styles.login}>Log in</Text>
         </Pressable>
       </View>
+      <Text> {loading ? "loading" : errorMessage} </Text>
     </View>
   );
 }
