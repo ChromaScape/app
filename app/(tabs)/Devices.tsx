@@ -1,29 +1,13 @@
-import { StatusBar } from "expo-status-bar";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
-import { Link, router, Stack } from "expo-router";
-
-interface Device {
-  id: number;
-  name: string;
-}
-
-const dummyDeviceData: { devices: Device[] } = {
-  devices: [
-    { id: 1, name: "Ethans Pi" },
-    { id: 2, name: "Adriens Pi" },
-    { id: 3, name: "Erins Pi" },
-  ],
-};
+import React from "react";
+import { router, Stack } from "expo-router";
+import { useApi } from "../../components/ApiProvider";
 
 const Devices = () => {
-  const devices = dummyDeviceData.devices;
-  const deviceNames: string[] = dummyDeviceData.devices.map(
-    (device) => device.name
-  );
+  const { devices } = useApi();
 
   return (
-    <View style={styles.container}>
+    <View>
       <Stack.Screen
         options={{
           title: "Devices",
@@ -36,26 +20,28 @@ const Devices = () => {
           },
         }}
       />
-      {deviceNames.map((device) => (
+      <ScrollView contentContainerStyle={styles.container}>
+        {devices.map((device) => (
+          <Pressable
+            key={device.id}
+            style={styles.deviceBlock}
+            onPress={() =>
+              router.push({
+                pathname: "/device/[id]",
+                params: { device: "" + device.id },
+              })
+            }
+          >
+            <Text style={styles.deviceText}>{"" + device.id}</Text>
+          </Pressable>
+        ))}
         <Pressable
-          key={device}
-          style={styles.deviceBlock}
-          onPress={() =>
-            router.push({
-              pathname: "/device/[id]",
-              params: { device },
-            })
-          }
+          onPress={() => router.push("/pairing")}
+          style={styles.addDeviceBlock}
         >
-          <Text style={styles.deviceText}>{device}</Text>
+          <Text style={styles.addDeviceText}>Add Device</Text>
         </Pressable>
-      ))}
-      <Pressable
-        onPress={() => router.push("/pairing")}
-        style={styles.addDeviceBlock}
-      >
-        <Text style={styles.addDeviceText}>Add Device</Text>
-      </Pressable>
+      </ScrollView>
     </View>
   );
 };

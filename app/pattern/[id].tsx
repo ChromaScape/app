@@ -13,8 +13,7 @@ import { router, Stack } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 
 const PatternP = () => {
-  const { device } = useLocalSearchParams();
-  const [isToggled, setIsToggled] = useState(false);
+  const { pattern } = useLocalSearchParams();
   const [isModalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState("");
 
@@ -22,15 +21,11 @@ const PatternP = () => {
     setModalVisible(!isModalVisible);
   };
 
-  const toggleSwitch = () => {
-    setIsToggled((previousState) => !previousState);
-  };
-
-  if (typeof device != "string") {
+  if (typeof pattern != "string") {
     console.log("unknown devide");
     return (
       <View>
-        <Text> error, unknown device </Text>
+        <Text> error, unknown pattern </Text>
       </View>
     );
   }
@@ -39,7 +34,7 @@ const PatternP = () => {
     <View>
       <Stack.Screen
         options={{
-          title: device,
+          title: pattern,
           headerStyle: {
             backgroundColor: "#74B3CE",
           },

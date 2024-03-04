@@ -1,30 +1,14 @@
-import { StatusBar } from "expo-status-bar";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { useState } from "react";
-import { Link, router, Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import React from "react";
 
-interface Device {
-  id: number;
-  name: string;
-}
-
-const dummyDeviceData: { devices: Device[] } = {
-  devices: [
-    { id: 1, name: "pattern 1" },
-    { id: 2, name: "pattern 2" },
-    { id: 3, name: "pattern 3" },
-  ],
-};
+import { useApi } from "../../components/ApiProvider";
 
 const Patterns = () => {
-  const devices = dummyDeviceData.devices;
-  const deviceNames: string[] = dummyDeviceData.devices.map(
-    (device) => device.name
-  );
+  const { patterns } = useApi();
 
   return (
-    <View style={styles.container}>
+    <View>
       <Stack.Screen
         options={{
           title: "Patterns",
@@ -37,26 +21,28 @@ const Patterns = () => {
           },
         }}
       />
-      {deviceNames.map((device) => (
+      <ScrollView contentContainerStyle={styles.container}>
+        {patterns.map((pattern) => (
+          <Pressable
+            key={pattern.id}
+            style={styles.patternBlock}
+            onPress={() =>
+              router.push({
+                pathname: "/pattern/[id]",
+                params: { pattern: "" + pattern.id },
+              })
+            }
+          >
+            <Text style={styles.patternText}>{"" + pattern.id}</Text>
+          </Pressable>
+        ))}
         <Pressable
-          key={device}
-          style={styles.patternBlock}
-          onPress={() =>
-            router.push({
-              pathname: "/pattern/[id]",
-              params: { device },
-            })
-          }
+          onPress={() => router.push("/addPatterns")}
+          style={styles.addPatternBlock}
         >
-          <Text style={styles.patternText}>{device}</Text>
+          <Text style={styles.addPatternText}>Add Pattern</Text>
         </Pressable>
-      ))}
-      <Pressable
-        onPress={() => router.push("/addPatterns")}
-        style={styles.addPatternBlock}
-      >
-        <Text style={styles.addPatternText}>Add Pattern</Text>
-      </Pressable>
+      </ScrollView>
     </View>
   );
 };
