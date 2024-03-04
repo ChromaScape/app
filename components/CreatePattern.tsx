@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View, Button } from "react-native";
+import React from "react";
 
 import { auth } from "../config/firebase";
 import { API_ENDPOINT, Pattern } from "../config/api";

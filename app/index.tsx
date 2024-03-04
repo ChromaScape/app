@@ -1,12 +1,14 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-// import Home from "./pages/home";
-import { Link } from "expo-router";
+import { Pressable, StyleSheet, Text, View} from "react-native";
+import { Link, router } from "expo-router";
+import React from "react";
 
-export default function App() {
+const Homepage = () => {
   return (
     <View style={styles.container}>
-      <Text> hi there </Text>
+      <Text style={styles.text}>ChromaScape</Text>
+        <Pressable onPress ={() => router.push ("/login")} style={styles.button}>
+          <Text style={styles.buttonText}>Get Started</Text>
+        </Pressable>
     </View>
   );
 }
@@ -14,8 +16,24 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#74B3CE",
     alignItems: "center",
     justifyContent: "center",
   },
+  text: {
+    color: "white",
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: "white",
+    padding: 6,
+    borderRadius: 2,
+  },
+  buttonText: {
+    color: "#74B3CE",
+    fontSize: 10,
+  },
 });
+
+export default Homepage;

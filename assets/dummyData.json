@@ -1,0 +1,7 @@
+{
+    "devices": [
+      { "id": 1, "name": "Ethans Pi" },
+      { "id": 2, "name": "Adriens Pi" },
+      { "id": 3, "name": "Erins Pi" }
+    ]
+  }
