@@ -3,18 +3,17 @@ import { router, Stack } from "expo-router";
 import React from "react";
 
 const Pairing = () => {
-
   return (
     <View style={styles.container}>
-        <Stack.Screen
+      <Stack.Screen
         options={{
-          title: 'Pairing',
+          title: "Pairing",
           headerStyle: {
-            backgroundColor: '#74B3CE',
+            backgroundColor: "#74B3CE",
           },
-          headerTintColor: '#fff',
+          headerTintColor: "#fff",
           headerTitleStyle: {
-            fontWeight: '400', 
+            fontWeight: "400",
           },
         }}
       />
@@ -24,10 +23,11 @@ const Pairing = () => {
       <Text style={styles.instructions}>
         2. After pressing continue, the camera will be opened.
       </Text>
-      <Text style={styles.instructions}>
-        3. Point the camera at lights.
-      </Text>
-      <Pressable onPress ={() => router.push ("/pairing_video")} style={styles.continueBlock}>
+      <Text style={styles.instructions}>3. Point the camera at lights.</Text>
+      <Pressable
+        onPress={() => router.push("/pairing_video")}
+        style={styles.continueBlock}
+      >
         <Text style={styles.continueText}>Continue</Text>
       </Pressable>
     </View>

@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Link, router } from "expo-router";
 import React from "react";
 
@@ -6,12 +6,12 @@ const Homepage = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>ChromaScape</Text>
-        <Pressable onPress ={() => router.push ("/login")} style={styles.button}>
-          <Text style={styles.buttonText}>Get Started</Text>
-        </Pressable>
+      <Pressable onPress={() => router.push("/login")} style={styles.button}>
+        <Text style={styles.buttonText}>Get Started</Text>
+      </Pressable>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

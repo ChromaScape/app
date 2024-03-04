@@ -1,9 +1,4 @@
-import {
-  Button,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
 
 import { Camera, CameraType } from "expo-camera";
 import React, { useState } from "react";

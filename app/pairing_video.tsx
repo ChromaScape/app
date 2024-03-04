@@ -72,15 +72,15 @@ const Pairing_video = () => {
 
   return (
     <View style={styles.container}>
-          <Stack.Screen
+      <Stack.Screen
         options={{
-          title: 'Pairing',
+          title: "Pairing",
           headerStyle: {
-            backgroundColor: '#74B3CE',
+            backgroundColor: "#74B3CE",
           },
-          headerTintColor: '#fff',
+          headerTintColor: "#fff",
           headerTitleStyle: {
-            fontWeight: '400', 
+            fontWeight: "400",
           },
         }}
       />
@@ -91,7 +91,7 @@ const Pairing_video = () => {
         // whiteBalance={WhiteBalance.shadow}
       ></Camera>
       <View style={styles.captureContainer}>
-      <Pressable style={styles.captureBlock} onPress={toggleCameraType}>
+        <Pressable style={styles.captureBlock} onPress={toggleCameraType}>
           <Text style={styles.captureText}>Toggle Camera</Text>
         </Pressable>
         <Pressable style={styles.captureBlock} onPress={togglePic}>
@@ -100,7 +100,7 @@ const Pairing_video = () => {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   camera: {
     // flex: 1,
@@ -124,11 +124,11 @@ const styles = StyleSheet.create({
   },
   captureBlock: {
     backgroundColor: "#A7AFB2",
-    width:"50%",
+    width: "50%",
     maxWidth: 180,
     padding: 50,
     marginHorizontal: 10,
-    borderRadius: 8, 
+    borderRadius: 8,
   },
   captureText: {
     color: "white",

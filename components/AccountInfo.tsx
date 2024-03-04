@@ -6,6 +6,7 @@ import { auth } from "../config/firebase";
 import { API_ENDPOINT, ApiUser } from "../config/api";
 
 import styles from "../styles";
+import React from "react";
 
 export default function CreateAccount() {
   const [user, setUser] = useState<User>();

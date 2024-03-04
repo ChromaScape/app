@@ -19,19 +19,21 @@ const dummyDeviceData: { devices: Device[] } = {
 
 const Patterns = () => {
   const devices = dummyDeviceData.devices;
-  const deviceNames: string[] = dummyDeviceData.devices.map(device => device.name);
+  const deviceNames: string[] = dummyDeviceData.devices.map(
+    (device) => device.name
+  );
 
   return (
     <View style={styles.container}>
-        <Stack.Screen
+      <Stack.Screen
         options={{
-          title: 'Patterns',
+          title: "Patterns",
           headerStyle: {
-            backgroundColor: '#74B3CE',
+            backgroundColor: "#74B3CE",
           },
-          headerTintColor: '#fff',
+          headerTintColor: "#fff",
           headerTitleStyle: {
-            fontWeight: '400',
+            fontWeight: "400",
           },
         }}
       />
@@ -39,16 +41,20 @@ const Patterns = () => {
         <Pressable
           key={device}
           style={styles.patternBlock}
-          onPress={() => router.push({
-            pathname: "/pattern/[id]",
-            params: {device},
-          })
-        }
+          onPress={() =>
+            router.push({
+              pathname: "/pattern/[id]",
+              params: { device },
+            })
+          }
         >
           <Text style={styles.patternText}>{device}</Text>
         </Pressable>
       ))}
-      <Pressable onPress ={() => router.push ("/addPatterns")} style={styles.addPatternBlock}>
+      <Pressable
+        onPress={() => router.push("/addPatterns")}
+        style={styles.addPatternBlock}
+      >
         <Text style={styles.addPatternText}>Add Pattern</Text>
       </Pressable>
     </View>
@@ -66,12 +72,12 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 5,
     borderRadius: 3,
-    width: 200
+    width: 200,
   },
   patternText: {
     color: "white",
     fontSize: 16,
-    textAlign: "center", 
+    textAlign: "center",
     justifyContent: "center",
   },
   addPatternBlock: {

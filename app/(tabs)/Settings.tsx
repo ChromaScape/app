@@ -1,6 +1,6 @@
-import {View, Pressable, StyleSheet, Text, } from "react-native";
+import { View, Pressable, StyleSheet, Text } from "react-native";
 import React from "react";
-import { signOut} from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { Link, router, Stack } from "expo-router";
 import { auth } from "../../config/firebase";
 
@@ -17,24 +17,24 @@ export default function SignOut() {
 
   return (
     <View style={styles.container}>
-        <Stack.Screen
+      <Stack.Screen
         options={{
-          title: 'Settings',
+          title: "Settings",
           headerStyle: {
-            backgroundColor: '#74B3CE',
+            backgroundColor: "#74B3CE",
           },
-          headerTintColor: '#fff',
+          headerTintColor: "#fff",
           headerTitleStyle: {
-            fontWeight: '400',
+            fontWeight: "400",
           },
         }}
       />
       <Pressable style={styles.logoutBlock}>
-          <Text style={styles.logoutText}>Log out</Text>
+        <Text style={styles.logoutText}>Log out</Text>
       </Pressable>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -45,14 +45,14 @@ const styles = StyleSheet.create({
   logoutBlock: {
     backgroundColor: "#A7AFB2",
     padding: 10,
-    width: '60%',
+    width: "60%",
     marginVertical: 5,
     borderRadius: 30,
   },
   logoutText: {
     color: "white",
     fontSize: 16,
-    textAlign: "center", 
+    textAlign: "center",
     justifyContent: "center",
   },
 });

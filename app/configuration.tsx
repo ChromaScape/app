@@ -1,40 +1,41 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { router, Stack } from "expo-router";
 import React from "react";
-import {Picker} from '@react-native-picker/picker';
-import { useState} from "react";
+import { Picker } from "@react-native-picker/picker";
+import { useState } from "react";
 
 const Configuration = () => {
   const [selectedValue, setSelectedValue] = useState("seconds");
 
   return (
     <View style={styles.container}>
-        <Stack.Screen
+      <Stack.Screen
         options={{
-          title: 'Configuration',
+          title: "Configuration",
           headerStyle: {
-            backgroundColor: '#74B3CE',
+            backgroundColor: "#74B3CE",
           },
-          headerTintColor: '#fff',
+          headerTintColor: "#fff",
           headerTitleStyle: {
-            fontWeight: '400', 
+            fontWeight: "400",
           },
         }}
       />
-      <Text style={styles.instructions}>
-        Please select the number of LEDs
-      </Text>
+      <Text style={styles.instructions}>Please select the number of LEDs</Text>
       <Picker
         selectedValue={selectedValue}
         style={styles.picker}
         itemStyle={styles.pickerItem}
         onValueChange={(itemValue) => setSelectedValue(itemValue)}
-        > 
+      >
         {Array.from({ length: 100 }, (_, index) => index + 1).map((number) => (
           <Picker.Item key={number} label={number.toString()} value={number} />
         ))}
-        </Picker>
-      <Pressable onPress ={() => router.push ("/configuration_video")} style={styles.continueBlock}>
+      </Picker>
+      <Pressable
+        onPress={() => router.push("/configuration_video")}
+        style={styles.continueBlock}
+      >
         <Text style={styles.continueText}>Continue</Text>
       </Pressable>
     </View>
@@ -72,8 +73,8 @@ const styles = StyleSheet.create({
     height: 50,
   },
   pickerItem: {
-    fontSize: 10, 
-    paddingVertical:10,
+    fontSize: 10,
+    paddingVertical: 10,
   },
 });
 

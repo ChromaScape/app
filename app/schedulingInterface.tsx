@@ -1,10 +1,18 @@
-import { Pressable, StyleSheet, Text, View, Modal, TextInput, Button} from "react-native";
-import { useState} from "react";
-import React from 'react'
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  Modal,
+  TextInput,
+  Button,
+} from "react-native";
+import { useState } from "react";
+import React from "react";
 import { Stack } from "expo-router";
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {Picker} from '@react-native-picker/picker';
-import { FontAwesome } from '@expo/vector-icons';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { Picker } from "@react-native-picker/picker";
+import { FontAwesome } from "@expo/vector-icons";
 
 const schedulingInterface = () => {
   const [isToggled, setIsToggled] = useState(false);
@@ -12,6 +20,7 @@ const schedulingInterface = () => {
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedValue, setSelectedValue] = useState("seconds");
+  const [inputText, setInputText] = useState("");
 
   const showDatePicker = () => {
     setDatePickerVisible(true);
@@ -21,7 +30,7 @@ const schedulingInterface = () => {
     setDatePickerVisible(false);
   };
 
-  const handleDateConfirm = (date) => {
+  const handleDateConfirm = (date: Date) => {
     hideDatePicker();
     setSelectedDate(date);
   };
@@ -31,38 +40,47 @@ const schedulingInterface = () => {
   };
 
   const toggleSwitch = () => {
-    setIsToggled(previousState => !previousState);
+    setIsToggled((previousState) => !previousState);
   };
 
   return (
     <View>
-        <Stack.Screen
+      <Stack.Screen
         options={{
-          title: 'Scheduling',
+          title: "Scheduling",
           headerStyle: {
-            backgroundColor: '#74B3CE',
+            backgroundColor: "#74B3CE",
           },
-          headerTintColor: '#fff',
+          headerTintColor: "#fff",
           headerTitleStyle: {
-            fontWeight: '400',
+            fontWeight: "400",
           },
         }}
       />
-        <Pressable onPress ={toggleModal} style={styles.optionsBlock}>
-          <View style={styles.optionBlockContainer}>
-            <Text style={styles.optionsText}>Change Pattern Name</Text>
-            <FontAwesome name="chevron-right" size={15} color="#777B7E" style={styles.icon1}/>
-          </View>
-        </Pressable>
-        <Pressable onPress ={showDatePicker} style={styles.optionsBlock}>
-
-          <View style={styles.optionBlockContainer}>
-            <Text style={styles.optionsText}>Set Time</Text>
-            <FontAwesome name="chevron-right" size={15} color="#777B7E" style={styles.icon2}/>
-          </View>
-        </Pressable>
-        <Modal
-        animationType="none" 
+      <Pressable onPress={toggleModal} style={styles.optionsBlock}>
+        <View style={styles.optionBlockContainer}>
+          <Text style={styles.optionsText}>Change Pattern Name</Text>
+          <FontAwesome
+            name="chevron-right"
+            size={15}
+            color="#777B7E"
+            style={styles.icon1}
+          />
+        </View>
+      </Pressable>
+      <Pressable onPress={showDatePicker} style={styles.optionsBlock}>
+        <View style={styles.optionBlockContainer}>
+          <Text style={styles.optionsText}>Set Time</Text>
+          <FontAwesome
+            name="chevron-right"
+            size={15}
+            color="#777B7E"
+            style={styles.icon2}
+          />
+        </View>
+      </Pressable>
+      <Modal
+        animationType="none"
         transparent={true}
         visible={isModalVisible}
         onRequestClose={() => {
@@ -71,22 +89,23 @@ const schedulingInterface = () => {
       >
         <View style={styles.modal}>
           <View style={styles.modalContent}>
-          <TextInput
+            <TextInput
               style={styles.input}
               placeholder="Duration..."
               onChangeText={(text) => setInputText(text)}
+              value={inputText}
             />
-        <Picker
-        selectedValue={selectedValue}
-        style={styles.picker}
-        itemStyle={styles.pickerItem}
-        onValueChange={(itemValue) => setSelectedValue(itemValue)}
-        >
-          <Picker.Item label="Seconds" value="seconds" />
-          <Picker.Item label="Minutes" value="minutes" />
-          <Picker.Item label="Hours" value="hours" />
-          <Picker.Item label="Days" value="days" />
-        </Picker>
+            <Picker
+              selectedValue={selectedValue}
+              style={styles.picker}
+              itemStyle={styles.pickerItem}
+              onValueChange={(itemValue) => setSelectedValue(itemValue)}
+            >
+              <Picker.Item label="Seconds" value="seconds" />
+              <Picker.Item label="Minutes" value="minutes" />
+              <Picker.Item label="Hours" value="hours" />
+              <Picker.Item label="Days" value="days" />
+            </Picker>
             <View style={styles.buttonContainer}>
               <Button title="Apply" onPress={toggleModal} color="#A7AFB2" />
               <View style={styles.buttonMargin} />
@@ -96,70 +115,70 @@ const schedulingInterface = () => {
         </View>
       </Modal>
       <DateTimePickerModal
-            isVisible={isDatePickerVisible}
-            mode="datetime"
-            onConfirm={handleDateConfirm}
-            onCancel={hideDatePicker}
-          />
+        isVisible={isDatePickerVisible}
+        mode="datetime"
+        onConfirm={handleDateConfirm}
+        onCancel={hideDatePicker}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   row: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    width: "100%",
   },
   icon1: {
     marginLeft: 220,
-    marginTop: 4
+    marginTop: 4,
   },
   icon2: {
     marginLeft: 312,
-    marginTop: 4
+    marginTop: 4,
   },
   optionBlockContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   optionsBlock: {
     borderBottomWidth: 0.75,
-    width: '100%',
-    borderBottomColor: '#A7AFB2',
+    width: "100%",
+    borderBottomColor: "#A7AFB2",
     padding: 15,
   },
   optionsText: {
     color: "#666",
-    textAlign: 'left',
-    fontSize: 14, 
+    textAlign: "left",
+    fontSize: 14,
   },
   buttonMargin: {
     width: 10,
   },
   buttonContainer: {
     marginTop: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    flexDirection: "row",
+    justifyContent: "space-evenly",
   },
   picker: {
     width: 150,
     height: 50,
   },
   pickerItem: {
-    fontSize: 10, 
-    paddingVertical:10,
+    fontSize: 10,
+    paddingVertical: 10,
   },
   modal: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 20,
     borderRadius: 15,
-    alignItems: 'center',
-    width: '80%',
+    alignItems: "center",
+    width: "80%",
   },
   inputBlock: {
     backgroundColor: "#A7AFB2",
@@ -175,7 +194,7 @@ const styles = StyleSheet.create({
   changeInputText: {
     color: "white",
     fontSize: 16,
-    textAlign: "center", 
+    textAlign: "center",
     justifyContent: "center",
   },
   input: {

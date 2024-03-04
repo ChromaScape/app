@@ -4,6 +4,7 @@ import { StyleSheet, Text, TextInput, View, Button } from "react-native";
 import { auth } from "../config/firebase";
 import { API_ENDPOINT, Pattern } from "../config/api";
 import styles from "../styles";
+import React from "react";
 
 export default function ViewPatterns(prop: {
   onPatternChange: (d: Pattern[]) => void;
