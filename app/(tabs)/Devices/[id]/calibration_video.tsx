@@ -8,20 +8,32 @@ import {
   TouchableOpacity,
   View,
   Pressable,
+  Image,
 } from "react-native";
 
-import { Camera, CameraType } from "expo-camera";
-import { useRef, useState } from "react";
+import { Camera, CameraType, ImageType } from "expo-camera";
+import { useRef, useState, useEffect } from "react";
 import React from "react";
+import { DiffResult, useOpenCV } from "../../../../components/OpenCvProvider";
+import { sendCalibrateRequest } from "../../../../config/backend";
+import { Device } from "../../../../config/api";
+
+let pos: [number, number, number, number][] = [];
+let imUri: string[] = [];
+
+type CameraState = "ready" | "capture" | "verify";
+
+const ledCount = 20; //todo
+let imgComplete = 0;
+let state: CameraState = "ready";
 
 const Pairing_video = () => {
   const [permission, requestPermission] = Camera.useCameraPermissions();
-  const [type, setType] = useState(CameraType.front);
+  const [type, setType] = useState(CameraType.back);
   const cameraRef = useRef<Camera | null>(null);
 
-  const [picInterval, setPicInterval] = useState<NodeJS.Timer | null>(null);
-
-  const [imUri, setImUri] = useState("");
+  const [imgsrc, setImgsrc] = useState("");
+  const { setDiffCallback, setDrawCallback, diff, draw } = useOpenCV();
 
   function toggleCameraType() {
     setType((current) =>
@@ -29,33 +41,89 @@ const Pairing_video = () => {
     );
   }
 
-  async function togglePic() {
-    // const pic = await cameraRef?.current?.takePictureAsync();
-
-    // console.log("taken");
-
-    if (picInterval) {
-      clearInterval(picInterval);
-      setPicInterval(null);
+  function handleImageDiff(id: number, { minmax }: DiffResult) {
+    pos[id] = [minmax.maxLoc.x, minmax.maxLoc.y, 0, 0];
+    console.log(id, " successfully diffed");
+    if (imgComplete + 1 == ledCount) {
+      console.log("drawing");
+      draw(0, imUri[0], pos);
     } else {
-      const newInterval = setInterval(async () => {
-        console.log("pre");
-        const pic = await cameraRef?.current?.takePictureAsync({
-          // isImageMirror: true,
-          skipProcessing: true,
-          onPictureSaved: (pic) => {
-            console.log("post");
-
-            if (pic?.uri) {
-              setImUri(pic.uri);
-            }
-          },
-        });
-      }, 100); // 100ms is 10fps
-
-      setPicInterval(newInterval);
+      imgComplete += 1;
     }
   }
+
+  async function takePic(id: number) {
+    console.log("taking pic: ", id);
+    const pic = await cameraRef?.current
+      ?.takePictureAsync({
+        // isImageMirror: true,
+        skipProcessing: true,
+        base64: true,
+        imageType: ImageType.png,
+        onPictureSaved: (pic) => {
+          if (pic?.base64) {
+            let base64 = "data:image/png;base64," + pic.base64;
+            // console.log({ id, len: imUri.length });
+            // setImUri([...imUri, base64]);
+
+            if (id == -1) {
+              imUri.push(base64);
+            } else {
+              imUri[id] = base64;
+            }
+
+            // instant compare
+            if (id >= 1) {
+              diff(id - 1, imUri[0], base64);
+            }
+          }
+        },
+      })
+      .catch((e) => console.error("taking pic: ", e));
+  }
+
+  function timeToDelayUntil(time: number) {
+    return time - Date.now();
+  }
+
+  function takeNpics(n: number, delay: number) {
+    state = "capture";
+    imgComplete = 0;
+
+    let now = Date.now();
+    let startTimeDelay = 2000;
+
+    sendCalibrateRequest(
+      "884782586024230913", //todo set to id
+      n,
+      now + startTimeDelay + delay / 2,
+      delay,
+      () => {}
+    );
+
+    imUri = [];
+    pos = [];
+
+    for (let i = 0; i < n + 1; i++) {
+      setTimeout(() => {
+        takePic(i);
+      }, timeToDelayUntil(now + i * delay + startTimeDelay));
+    }
+  }
+
+  useEffect(() => {
+    state = "ready";
+    pos = [];
+    imUri = [];
+    setDiffCallback(handleImageDiff);
+    setDrawCallback((id: number, src: string) => {
+      console.log("draw recv");
+      if (state == "capture") {
+        setImgsrc(src);
+        state = "verify";
+      }
+    });
+  }, []);
 
   if (!permission) {
     return <Text> no permission </Text>;
@@ -81,19 +149,56 @@ const Pairing_video = () => {
           },
         }}
       />
-      <Camera
-        ref={cameraRef}
-        style={styles.camera}
-        type={type}
-        // whiteBalance={WhiteBalance.shadow}
-      ></Camera>
+      {state == "verify" ? (
+        <Image source={{ uri: imgsrc }} style={styles.camera}></Image>
+      ) : (
+        <Camera
+          ref={cameraRef}
+          style={styles.camera}
+          type={type}
+          // whiteBalance={WhiteBalance.shadow}
+        ></Camera>
+      )}
+      <Text>
+        {state == "ready" && ""}
+        {state == "capture" && "Please hold the camera still"}
+        {state == "verify" && "Are the detected positions accurate?"}
+      </Text>
       <View style={styles.captureContainer}>
-        <Pressable style={styles.captureBlock} onPress={toggleCameraType}>
-          <Text style={styles.captureText}>Toggle Camera</Text>
-        </Pressable>
-        <Pressable style={styles.captureBlock} onPress={togglePic}>
-          <Text style={styles.captureText}>Capture Frames</Text>
-        </Pressable>
+        {state == "ready" && (
+          <Pressable style={styles.captureBlock} onPress={toggleCameraType}>
+            <Text style={styles.captureText}>Toggle Camera</Text>
+          </Pressable>
+        )}
+        {state == "ready" && (
+          <Pressable
+            style={styles.captureBlock}
+            onPress={() => takeNpics(ledCount, 250)}
+          >
+            <Text style={styles.captureText}>Capture Frames</Text>
+          </Pressable>
+        )}
+        {state == "capture" && (
+          <Pressable style={styles.captureBlock} disabled={true}>
+            <Text style={styles.captureText}>Capturing...</Text>
+          </Pressable>
+        )}
+        {state == "verify" && (
+          <Pressable
+            style={styles.captureBlock}
+            // onPress={} //todo
+          >
+            <Text style={styles.captureText}>No, retry</Text>
+          </Pressable>
+        )}
+        {state == "verify" && (
+          <Pressable
+            style={styles.captureBlock}
+            // onPress={} //todo
+          >
+            <Text style={styles.captureText}>Yes, take from a new angle</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );
@@ -135,8 +240,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-function useEffect(arg0: () => () => void, arg1: never[]) {
-  throw new Error("Function not implemented.");
-}
 
 export default Pairing_video;
