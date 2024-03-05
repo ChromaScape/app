@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
-import { router, Stack } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import React from "react";
+import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 
 const Configuration = () => {
@@ -20,9 +21,17 @@ const Configuration = () => {
           },
         }}
       />
-      <Text style={styles.instructions}>
-        Please choose a new angle and take a new video
-      </Text>
+      <Text style={styles.instructions}>Please select the number of LEDs</Text>
+      <Picker
+        selectedValue={selectedValue}
+        style={styles.picker}
+        itemStyle={styles.pickerItem}
+        onValueChange={(itemValue) => setSelectedValue(itemValue)}
+      >
+        {Array.from({ length: 100 }, (_, index) => index + 1).map((number) => (
+          <Picker.Item key={number} label={number.toString()} value={number} />
+        ))}
+      </Picker>
       <Pressable
         onPress={() => router.push("/configuration_video")}
         style={styles.continueBlock}
@@ -58,6 +67,14 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 12,
     textAlign: "center",
+  },
+  picker: {
+    width: 150,
+    height: 50,
+  },
+  pickerItem: {
+    fontSize: 10,
+    paddingVertical: 10,
   },
 });
 

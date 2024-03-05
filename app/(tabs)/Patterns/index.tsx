@@ -2,7 +2,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router, Stack } from "expo-router";
 import React from "react";
 
-import { useApi } from "../../components/ApiProvider";
+import { useApi } from "../../../components/ApiProvider";
 
 const Patterns = () => {
   const { patterns } = useApi();
@@ -28,7 +28,7 @@ const Patterns = () => {
             style={styles.patternBlock}
             onPress={() =>
               router.push({
-                pathname: "/pattern/[id]",
+                pathname: "Patterns/[id]",
                 params: { pattern: "" + pattern.id },
               })
             }
@@ -37,7 +37,7 @@ const Patterns = () => {
           </Pressable>
         ))}
         <Pressable
-          onPress={() => router.push("/addPatterns")}
+          onPress={() => router.push("addPatterns")}
           style={styles.addPatternBlock}
         >
           <Text style={styles.addPatternText}>Add Pattern</Text>

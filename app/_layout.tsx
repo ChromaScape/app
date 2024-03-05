@@ -1,9 +1,16 @@
-import { Stack } from "expo-router";
+import { Slot, Stack } from "expo-router";
 import React from "react";
 import { UserProvider } from "../components/UserProvider";
 import { ApiProvider } from "../components/ApiProvider";
 
 const RootLayout = () => {
+  // return (
+  //   <UserProvider>
+  //     <ApiProvider>
+  //       <Slot />
+  //     </ApiProvider>
+  //   </UserProvider>
+  // );
   return (
     <UserProvider>
       <ApiProvider>

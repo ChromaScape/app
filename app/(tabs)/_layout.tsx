@@ -1,4 +1,4 @@
-import { Tabs } from "expo-router";
+import { Slot, Tabs } from "expo-router";
 import React from "react";
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -17,6 +17,7 @@ const TabsLayout = () => {
           tabBarIcon: () => (
             <FontAwesome name="lightbulb-o" size={26} color={"#777B7E"} />
           ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -25,6 +26,7 @@ const TabsLayout = () => {
           tabBarIcon: () => (
             <FontAwesome name="th-large" size={24} color={"#777B7E"} />
           ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen

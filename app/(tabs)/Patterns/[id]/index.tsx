@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import {
   Text,
@@ -55,8 +55,8 @@ const PatternP = () => {
           />
         </View>
       </Pressable>
-      <Pressable
-        onPress={() => router.push("/schedulingInterface")}
+      <Link
+        href={`Patterns/${pattern}/schedulingInterface`}
         style={styles.optionsBlock}
       >
         <View style={styles.optionBlockContainer}>
@@ -68,23 +68,7 @@ const PatternP = () => {
             style={styles.icon2}
           />
         </View>
-      </Pressable>
-      <Pressable
-        onPress={() => router.push("/changeConfiguration")}
-        style={styles.optionsBlock}
-      >
-        <View style={styles.optionBlockContainer}>
-          <Text style={styles.optionsText}>Apply</Text>
-        </View>
-      </Pressable>
-      <Pressable
-        onPress={() => router.push("/changeLEDPatterns")}
-        style={styles.optionsBlock}
-      >
-        <View style={styles.optionBlockContainer}>
-          <Text style={styles.deleteText}>Delete</Text>
-        </View>
-      </Pressable>
+      </Link>
 
       <Modal
         animationType="none"

@@ -1,4 +1,5 @@
 import { StatusBar } from "expo-status-bar";
+import { Link, router, Stack } from "expo-router";
 import {
   Button,
   ScrollView,
@@ -6,20 +7,18 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Pressable,
 } from "react-native";
 
-import { Camera, CameraType, WhiteBalance } from "expo-camera";
-import { Image } from "expo-image";
+import { Camera, CameraType } from "expo-camera";
 import { useRef, useState } from "react";
 import React from "react";
-import CameraGl from "../components/CameraGl";
 
-export default function App() {
+const Pairing_video = () => {
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [type, setType] = useState(CameraType.front);
   const cameraRef = useRef<Camera | null>(null);
 
-  const [isPic, setIsPic] = useState(false);
   const [picInterval, setPicInterval] = useState<NodeJS.Timer | null>(null);
 
   const [imUri, setImUri] = useState("");
@@ -69,39 +68,75 @@ export default function App() {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text> refresh </Text>
-      <Button title="take pic" onPress={togglePic}></Button>
-      <Text> {picInterval ? "taking" : "not taking"}</Text>
-      <Button title="toggle" onPress={toggleCameraType} />
+    <View style={styles.container}>
+      <Stack.Screen
+        options={{
+          title: "Calibration",
+          headerStyle: {
+            backgroundColor: "#74B3CE",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "400",
+          },
+        }}
+      />
       <Camera
         ref={cameraRef}
         style={styles.camera}
         type={type}
         // whiteBalance={WhiteBalance.shadow}
       ></Camera>
-      <Image style={styles.image} source={imUri} contentFit="contain" />
-      <Text> how</Text>
-      <CameraGl />
-    </ScrollView>
+      <View style={styles.captureContainer}>
+        <Pressable style={styles.captureBlock} onPress={toggleCameraType}>
+          <Text style={styles.captureText}>Toggle Camera</Text>
+        </Pressable>
+        <Pressable style={styles.captureBlock} onPress={togglePic}>
+          <Text style={styles.captureText}>Capture Frames</Text>
+        </Pressable>
+      </View>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: "center",
+    justifyContent: "center",
+  },
+  captureContainer: {
+    // flex: 1,
+    padding: "5%",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
   camera: {
     // flex: 1,
-    height: 200,
+    flexGrow: 1,
+    // height: "60%",
+    borderRadius: 5,
   },
   image: {
     flex: 1,
-    height: 200,
     backgroundColor: "#0553",
+  },
+  captureBlock: {
+    backgroundColor: "#A7AFB2",
+    width: "50%",
+    // maxWidth: 180,
+    padding: "5%",
+    marginHorizontal: 10,
+    borderRadius: 8,
+  },
+  captureText: {
+    color: "white",
+    fontSize: 16,
+    textAlign: "center",
   },
 });
 function useEffect(arg0: () => () => void, arg1: never[]) {
   throw new Error("Function not implemented.");
 }
+
+export default Pairing_video;

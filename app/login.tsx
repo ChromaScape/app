@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View, Pressable } from "react-native";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import React from "react";
 import { useUser } from "../components/UserProvider";
 
@@ -15,6 +15,7 @@ export default function LogIn() {
   useEffect(() => {
     if (apiUser && user && idToken) {
       router.push("/Devices");
+      console.log("pushing");
     }
   }, [apiUser]);
 
@@ -57,9 +58,9 @@ export default function LogIn() {
       <View style={styles.signupText}>
         <Text style={styles.loginInfo}>Don't have an account?</Text>
         <View style={styles.space}></View>
-        <Pressable onPress={() => router.push("/signup")}>
-          <Text style={styles.signup}>Sign up</Text>
-        </Pressable>
+        <Link href="/signup" style={styles.signup}>
+          Sign up
+        </Link>
       </View>
       <Text> {loading ? "loading" : errorMessage} </Text>
     </View>

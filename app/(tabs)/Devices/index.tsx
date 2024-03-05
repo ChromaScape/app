@@ -1,7 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { router, Stack } from "expo-router";
-import { useApi } from "../../components/ApiProvider";
+import { useApi } from "../../../components/ApiProvider";
 
 const Devices = () => {
   const { devices } = useApi();
@@ -27,7 +27,7 @@ const Devices = () => {
             style={styles.deviceBlock}
             onPress={() =>
               router.push({
-                pathname: "/device/[id]",
+                pathname: "Devices/[id]",
                 params: { device: "" + device.id },
               })
             }
@@ -35,12 +35,6 @@ const Devices = () => {
             <Text style={styles.deviceText}>{"" + device.id}</Text>
           </Pressable>
         ))}
-        <Pressable
-          onPress={() => router.push("/pairing")}
-          style={styles.addDeviceBlock}
-        >
-          <Text style={styles.addDeviceText}>Add Device</Text>
-        </Pressable>
       </ScrollView>
     </View>
   );
@@ -64,20 +58,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     justifyContent: "center",
-  },
-  addDeviceBlock: {
-    backgroundColor: "#B8B8B8",
-    padding: 8,
-    marginVertical: 2,
-    marginTop: 5,
-    borderRadius: 3,
-    width: "100%",
-    maxWidth: 150,
-  },
-  addDeviceText: {
-    color: "white",
-    fontSize: 12,
-    textAlign: "center",
   },
 });
 

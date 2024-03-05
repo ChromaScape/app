@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from "expo-router";
+import { Link, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import {
   Text,
@@ -13,7 +13,7 @@ import { router, Stack } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 
 const DeviceP = () => {
-  const { device } = useLocalSearchParams();
+  const { device } = useGlobalSearchParams();
   const [isModalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState("");
 
@@ -55,22 +55,9 @@ const DeviceP = () => {
           />
         </View>
       </Pressable>
-      <Pressable
-        onPress={() => router.push("/viewConfiguration")}
-        style={styles.optionsBlock}
-      >
-        <View style={styles.optionBlockContainer}>
-          <Text style={styles.optionsText}>View LED configuration</Text>
-          <FontAwesome
-            name="chevron-right"
-            size={15}
-            color="#777B7E"
-            style={styles.icon2}
-          />
-        </View>
-      </Pressable>
-      <Pressable
-        onPress={() => router.push("/configuration")}
+
+      <Link
+        href={`Devices/${device}/configuration`}
         style={styles.optionsBlock}
       >
         <View style={styles.optionBlockContainer}>
@@ -82,29 +69,16 @@ const DeviceP = () => {
             style={styles.icon3}
           />
         </View>
-      </Pressable>
-      <Pressable
-        onPress={() => router.push("/changeLEDPatterns")}
-        style={styles.optionsBlock}
-      >
-        <View style={styles.optionBlockContainer}>
-          <Text style={styles.optionsText}>Change LED patterns</Text>
-          <FontAwesome
-            name="chevron-right"
-            size={15}
-            color="#777B7E"
-            style={styles.icon4}
-          />
-        </View>
-      </Pressable>
-      <Pressable
-        onPress={() => router.push("/changeLEDPatterns")}
-        style={styles.optionsBlock}
-      >
+      </Link>
+      <Link href="/todo" style={styles.optionsBlock}>
         <View style={styles.optionBlockContainer}>
           <Text style={styles.deleteText}>Delete</Text>
         </View>
-      </Pressable>
+      </Link>
+
+      <Link href={`Devices/${device}/calibrate`} style={styles.addDeviceBlock}>
+        <Text style={styles.addDeviceText}>Calibrate</Text>
+      </Link>
 
       <Modal
         animationType="none"
@@ -211,6 +185,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 18,
     width: 130,
+  },
+  addDeviceBlock: {
+    backgroundColor: "#B8B8B8",
+    padding: 8,
+    marginVertical: 2,
+    marginTop: 5,
+    borderRadius: 3,
+    width: "100%",
+    maxWidth: 150,
+  },
+  addDeviceText: {
+    color: "white",
+    fontSize: 12,
+    textAlign: "center",
   },
 });
 

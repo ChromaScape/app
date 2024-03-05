@@ -1,13 +1,15 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
-import { router, Stack } from "expo-router";
+import { Link, router, Stack, useGlobalSearchParams } from "expo-router";
 import React from "react";
 
 const Pairing = () => {
+  const { device } = useGlobalSearchParams();
+
   return (
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          title: "Pairing",
+          title: "Calibrate",
           headerStyle: {
             backgroundColor: "#74B3CE",
           },
@@ -24,12 +26,12 @@ const Pairing = () => {
         2. After pressing continue, the camera will be opened.
       </Text>
       <Text style={styles.instructions}>3. Point the camera at lights.</Text>
-      <Pressable
-        onPress={() => router.push("/pairing_video")}
+      <Link
+        href={`Devices/${device}/calibration_video`}
         style={styles.continueBlock}
       >
         <Text style={styles.continueText}>Continue</Text>
-      </Pressable>
+      </Link>
     </View>
   );
 };
