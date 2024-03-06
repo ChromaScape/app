@@ -27,8 +27,7 @@ const Devices = () => {
             style={styles.deviceBlock}
             onPress={() =>
               router.push({
-                pathname: "Devices/[id]",
-                params: { device: "" + device.id },
+                pathname: `Devices/${device.id}`,
               })
             }
           >

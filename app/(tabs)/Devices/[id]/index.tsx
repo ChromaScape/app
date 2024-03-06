@@ -11,24 +11,35 @@ import {
 } from "react-native";
 import { router, Stack } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
+import { useApi } from "../../../../components/ApiProvider";
+import { Picker } from "@react-native-picker/picker";
+import { sendPatternRequest } from "../../../../config/backend";
 
 const DeviceP = () => {
-  const { device } = useGlobalSearchParams();
+  const searchParams = useGlobalSearchParams();
   const [isModalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState("");
+  const { patterns } = useApi();
+  const [selectedPattern, setSelectedPattern] = useState("");
+
+  const device = searchParams.id;
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
   if (typeof device != "string") {
-    console.log("unknown devide");
+    console.log("unknown devide: ", { searchParams });
     return (
       <View>
         <Text> error, unknown device </Text>
       </View>
     );
   }
+
+  let availablePatterns = patterns.filter((p) =>
+    p.content.startsWith("preset, ")
+  );
 
   return (
     <View>
@@ -55,7 +66,36 @@ const DeviceP = () => {
           />
         </View>
       </Pressable>
+      <View style={styles.optionsBlock}>
+        <Link
+          href={`Devices/${device}/calibrate`}
+          style={styles.optionBlockContainer}
+        >
+          <Text style={styles.optionsText}>Calibrate</Text>
+        </Link>
+      </View>
 
+      <Picker
+        selectedValue={selectedPattern}
+        // style={styles.picker}
+        // itemStyle={styles.pickerItem}
+        onValueChange={(itemValue) => setSelectedPattern(itemValue)}
+      >
+        {availablePatterns.map((pattern) => (
+          <Picker.Item
+            key={pattern.id}
+            label={pattern.content.replace("preset, ", "")}
+            value={pattern.id}
+          />
+        ))}
+      </Picker>
+      <Button
+        title="Select Pattern"
+        onPress={() => {
+          sendPatternRequest(device, selectedPattern);
+        }}
+      />
+      {/* 
       <Link
         href={`Devices/${device}/configuration`}
         style={styles.optionsBlock}
@@ -74,11 +114,7 @@ const DeviceP = () => {
         <View style={styles.optionBlockContainer}>
           <Text style={styles.deleteText}>Delete</Text>
         </View>
-      </Link>
-
-      <Link href={`Devices/${device}/calibrate`} style={styles.addDeviceBlock}>
-        <Text style={styles.addDeviceText}>Calibrate</Text>
-      </Link>
+      </Link> */}
 
       <Modal
         animationType="none"

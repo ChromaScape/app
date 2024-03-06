@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { Link, router, Stack } from "expo-router";
+import { Link, router, Stack, useGlobalSearchParams } from "expo-router";
 import {
   Button,
   ScrollView,
@@ -16,10 +16,11 @@ import { useRef, useState, useEffect } from "react";
 import React from "react";
 import { DiffResult, useOpenCV } from "../../../../components/OpenCvProvider";
 import { sendCalibrateRequest } from "../../../../config/backend";
-import { Device } from "../../../../config/api";
+import { API_ENDPOINT, Device } from "../../../../config/api";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
+import { auth } from "../../../../config/firebase";
 
-type CameraState = "ready" | "capture" | "verify" | "calculating";
+type CameraState = "ready" | "capture" | "verify" | "calculating" | "submit";
 type DisplayPos = [number, number, number, number];
 
 let pos: DisplayPos[] = [];
@@ -29,20 +30,22 @@ let currentAngle = 0;
 let loggedPositions: [DisplayPos[], DisplayPos[]] = [[], []];
 let loggedIms: [string, string] = ["", ""];
 
-const ledCount = 20; //todo
-const scaleFactor = 0.5;
-const delayMs = 400;
+const ledCount = 50; //todo
+const scaleFactor = 0.25;
+const delayMs = 250;
 let imgComplete = 0;
 
 const Pairing_video = () => {
   const { setDiffCallback, setDrawCallback, diff, draw } = useOpenCV();
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const cameraRef = useRef<Camera | null>(null);
-  // console.log({ cameraRef });
+  const searchParams = useGlobalSearchParams();
+  const device = searchParams.id;
 
   const [imgsrc, setImgsrc] = useState("");
   const [type, setType] = useState(CameraType.back);
   const [displayState, setDisplayState] = useState<CameraState>("ready");
+  const [triangulatedPos, setTriangulatedPos] = useState("");
 
   const stateRef = useRef<CameraState>();
   stateRef.current = displayState;
@@ -204,6 +207,44 @@ const Pairing_video = () => {
     }
   }
 
+  async function sendPos(pos: [number, number, number][] | string) {
+    try {
+      const idToken = await auth.currentUser?.getIdToken();
+
+      if (typeof pos == "string") {
+        pos = JSON.parse(pos);
+      }
+
+      if (!idToken) {
+        console.error("not logged in");
+        return;
+      }
+
+      if (!device || typeof device != "string") {
+        console.log({ device });
+        console.error("invalid device");
+        return;
+      }
+      const res = await fetch(API_ENDPOINT + "/user/device_layout", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: idToken,
+        },
+        body: JSON.stringify({
+          device_id: device,
+          layout: pos,
+        }),
+      });
+
+      console.log("recv: ", await res.text());
+    } catch (e) {
+      console.error("error sending layout: ", e);
+    }
+    router.navigate(`Devices/${device}`);
+  }
+
   useEffect(() => {
     setDisplayState("ready");
     pos = [];
@@ -219,6 +260,10 @@ const Pairing_video = () => {
       setDisplayState("verify");
     });
   }, []);
+
+  if (typeof device != "string") {
+    return <Text> no device selected </Text>;
+  }
 
   if (!permission) {
     return <Text> no permission </Text>;
@@ -265,6 +310,24 @@ const Pairing_video = () => {
         }}
       >
         <Text style={styles.captureText}>No, retry</Text>
+      </Pressable>
+
+      <Pressable
+        style={styles.captureBlock}
+        onPress={() => {
+          const pos2d: [number, number, number][] = pos.map(([x, y]) => [
+            x,
+            y,
+            0,
+          ]);
+
+          console.log({ pos2d });
+
+          sendPos(pos2d);
+        }}
+      >
+        <Text style={styles.captureText}>Yes</Text>
+        <Text style={styles.captureText}>(2D scan)</Text>
       </Pressable>
       <Pressable
         style={styles.captureBlock}
@@ -313,13 +376,31 @@ const Pairing_video = () => {
             )
               .then(async (res) => {
                 console.log("statis: ", res.status);
-                console.log(await res.text());
+                const text = await res.text();
+                setTriangulatedPos(text);
+                setDisplayState("submit");
+                console.log(text);
               })
               .catch((err) => {
                 console.log("fetch err: ", err);
               });
           }
-        }} //todo
+        }}
+      >
+        <Text style={styles.captureText}>Yes</Text>
+        <Text style={styles.captureText}>(3D scan)</Text>
+      </Pressable>
+    </>
+  );
+
+  const submitButtons = (
+    <>
+      <Link href={`Devices/${device}`} style={styles.captureBlock}>
+        <Text style={styles.captureText}>No</Text>
+      </Link>
+      <Pressable
+        style={styles.captureBlock}
+        onPress={() => sendPos(triangulatedPos)}
       >
         <Text style={styles.captureText}>Yes</Text>
       </Pressable>
@@ -340,8 +421,12 @@ const Pairing_video = () => {
           },
         }}
       />
-      {displayState == "verify" ? (
+      {displayState == "verify" || displayState == "calculating" ? (
         <Image source={{ uri: imgsrc }} style={styles.camera}></Image>
+      ) : displayState == "submit" ? (
+        <Text style={styles.camera}>
+          {`These are the calculated positions of the lights. There is no visualization yet :'( \n"${triangulatedPos}"`}
+        </Text>
       ) : (
         <Camera
           ref={cameraRef}
@@ -362,12 +447,14 @@ const Pairing_video = () => {
         {displayState == "verify" && "Are the detected positions accurate?"}
         {displayState == "calculating" &&
           "Please wait a moment, calculating 3D pos"}
+        {displayState == "submit" && "Is the triangulation ok to submit?"}
       </Text>
       <View style={styles.captureContainer}>
         {displayState == "ready" && readyButtons}
-        {displayState == "capture" ||
-          (displayState == "calculating" && captureButtons)}
+        {(displayState == "capture" || displayState == "calculating") &&
+          captureButtons}
         {displayState == "verify" && verifyButtons}
+        {displayState == "submit" && submitButtons}
       </View>
     </View>
   );

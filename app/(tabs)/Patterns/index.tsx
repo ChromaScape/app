@@ -22,20 +22,24 @@ const Patterns = () => {
         }}
       />
       <ScrollView contentContainerStyle={styles.container}>
-        {patterns.map((pattern) => (
-          <Pressable
-            key={pattern.id}
-            style={styles.patternBlock}
-            onPress={() =>
-              router.push({
-                pathname: "Patterns/[id]",
-                params: { pattern: "" + pattern.id },
-              })
-            }
-          >
-            <Text style={styles.patternText}>{"" + pattern.id}</Text>
-          </Pressable>
-        ))}
+        {patterns
+          .filter((p) => p.content.startsWith("preset, "))
+          .map((pattern) => (
+            <Pressable
+              key={pattern.id}
+              style={styles.patternBlock}
+              onPress={() =>
+                router.push({
+                  pathname: "Patterns/[id]",
+                  params: { pattern: "" + pattern.id },
+                })
+              }
+            >
+              <Text style={styles.patternText}>
+                {"" + pattern.content.replace("preset, ", "")}
+              </Text>
+            </Pressable>
+          ))}
         <Pressable
           onPress={() => router.push("addPatterns")}
           style={styles.addPatternBlock}

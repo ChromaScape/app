@@ -1,11 +1,19 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
-import { router, Stack, useLocalSearchParams } from "expo-router";
+import {
+  Link,
+  router,
+  Stack,
+  useGlobalSearchParams,
+  useLocalSearchParams,
+} from "expo-router";
 import React from "react";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 
 const Configuration = () => {
   const [selectedValue, setSelectedValue] = useState("seconds");
+  const searchParams = useGlobalSearchParams();
+  const device = searchParams.id;
 
   return (
     <View style={styles.container}>
@@ -32,12 +40,12 @@ const Configuration = () => {
           <Picker.Item key={number} label={number.toString()} value={number} />
         ))}
       </Picker>
-      <Pressable
-        onPress={() => router.push("/configuration_video")}
+      <Link
+        href={`Devices/${device}/configuration_video`}
         style={styles.continueBlock}
       >
         <Text style={styles.continueText}>Continue</Text>
-      </Pressable>
+      </Link>
     </View>
   );
 };

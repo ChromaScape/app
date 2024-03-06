@@ -11,6 +11,39 @@ export function calibrateFragment(
     return `calibrate_fragment, ${lightCount}, ${start_seconds}, ${delay_seconds}`;
 }
 
+export async function sendPatternRequest(deviceId: string, patternId: string) {
+
+    try {
+        const idToken = await auth.currentUser?.getIdToken();
+
+        if (!idToken) {
+            console.error("not logged in");
+            return;
+        }
+
+
+        const assign_res = await fetch(API_ENDPOINT + "/user/device_pattern", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: idToken,
+            },
+            body: JSON.stringify({
+                device_id: deviceId,
+                pattern_id: patternId,
+            }),
+        });
+
+        const assign_ret = await assign_res.json();
+        console.log({ assign_ret });
+    } catch (e) {
+        console.error("failed to set pattern: ", e)
+    }
+
+
+}
+
 export async function sendCalibrateRequest(
     deviceId: string,
     lightCount: number,

@@ -3,7 +3,9 @@ import { Link, router, Stack, useGlobalSearchParams } from "expo-router";
 import React from "react";
 
 const Pairing = () => {
-  const { device } = useGlobalSearchParams();
+  const searchParams = useGlobalSearchParams();
+  const device = searchParams.id;
+  console.log({ searchParams });
 
   return (
     <View style={styles.container}>
